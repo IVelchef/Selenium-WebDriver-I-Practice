@@ -19,6 +19,8 @@ public class loginVerification extends authenticated {
         driver = startBrowser(BrowserTypes.CHROME);
         wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         driver.get("https://www.saucedemo.com/");
+        driver.manage().window().maximize();
+
     }
 
     @ParameterizedTest
@@ -31,7 +33,6 @@ public class loginVerification extends authenticated {
     })
     public void userAuthenticated(String username, String password) {
 
-        driver.manage().window().maximize();
         driver.findElement(By.xpath("//input[@data-test='username']")).sendKeys(username);
         driver.findElement(By.xpath("//input[@data-test='password']")).sendKeys(password + Keys.ENTER);
 

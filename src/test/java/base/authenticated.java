@@ -3,11 +3,7 @@ package base;
 import enums.BrowserTypes;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -19,7 +15,6 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.List;
 
 public class authenticated {
@@ -64,8 +59,8 @@ public class authenticated {
         passwordField.sendKeys(password);
         loginBtn.click();
 
-        WebElement inventoryPageTitle = driver.findElement(By.xpath("//div[@class='app_logo']"));
-        wait.until(ExpectedConditions.visibilityOf(inventoryPageTitle));
+        WebElement cartContainer = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("shopping_cart_container")));
+        Assertions.assertTrue(cartContainer.isDisplayed(), "'shopping_cart_container' element is not visible! Login successful.");
     }
 
     protected WebElement getProductByTitle(String title) {
