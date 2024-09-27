@@ -34,7 +34,7 @@ public class authenticated {
         driver = startBrowser(BrowserTypes.CHROME);
 
         // Configure wait
-        wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(2));
 
         driver.get("https://www.saucedemo.com/");
     }
