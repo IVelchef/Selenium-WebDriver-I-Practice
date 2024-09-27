@@ -2,8 +2,12 @@ package base;
 
 import enums.BrowserTypes;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -16,6 +20,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 public class authenticated {
 
@@ -24,26 +29,16 @@ public class authenticated {
     public static WebDriverWait wait;
 
     @AfterEach
-    public void afterTest(){
-        // close driver
-        driver.close();
+    public void afterTest() {
+        driver.quit();
     }
 
-    @BeforeEach
-    public void beforeTests(){
-        driver = startBrowser(BrowserTypes.CHROME);
-
-        // Configure wait
-        wait = new WebDriverWait(driver, Duration.ofSeconds(2));
-
-        driver.get("https://www.saucedemo.com/");
-    }
 
 
 
     protected static WebDriver startBrowser(BrowserTypes browserType) {
         // Setup Browser
-        switch (browserType){
+        switch (browserType) {
             case CHROME:
                 ChromeOptions chromeOptions = new ChromeOptions();
                 return new ChromeDriver(chromeOptions);
@@ -57,30 +52,37 @@ public class authenticated {
 
         return null;
     }
+    protected static void authenticateWithUser(String username, String password){
+        //data-test="username"
+        WebElement usernameField = driver.findElement(By.xpath("//input[@data-test='username']"));
+        //data-test="password"
+        WebElement passwordField = driver.findElement(By.xpath("//input[@data-test='password']"));
+        //data-test="login-button"
+        WebElement loginBtn = driver.findElement(By.xpath("//input[@data-test='login-button']"));
 
-    protected static void authenticateWithUser(String username, String pass) {
-        WebElement usernameInput = driver.findElement(By.xpath("//input[@data-test='username']"));
-        usernameInput.sendKeys(username);
+        usernameField.sendKeys(username);
+        passwordField.sendKeys(password);
+        loginBtn.click();
 
-        WebElement password = driver.findElement(By.xpath("//input[@data-test='password']"));
-        password.sendKeys(pass);
-
-        WebElement loginButton = driver.findElement(By.xpath("//input[@data-test='login-button']"));
-        loginButton.click();
-
-        // ?
         WebElement inventoryPageTitle = driver.findElement(By.xpath("//div[@class='app_logo']"));
         wait.until(ExpectedConditions.visibilityOf(inventoryPageTitle));
     }
 
-    protected WebElement getProductByTitle(String title){
+    protected WebElement getProductByTitle(String title) {
         return driver.findElement(By.xpath(String.format("//div[@class='inventory_item' and descendant::div[text()='%s']]", title)));
     }
 
-    protected static void fillShippingDetails(String firstName, String lastName, String zip) {
-        driver.findElement(By.id("first-name")).sendKeys(firstName);
-        driver.findElement(By.id("last-name")).sendKeys(lastName);
-        driver.findElement(By.id("postal-code")).sendKeys(zip);
+    protected List<WebElement> getAllProducts(){
+        return driver.findElements(By.xpath("//div[@data-test='inventory-item']"));
     }
 
+    protected static void logout (){
+
+        WebElement burgerBtn = driver.findElement(By.xpath("//div[@class='bm-burger-button']"));
+        burgerBtn.click();
+
+        WebElement logoutBtn = driver.findElement(By.xpath("//a[@data-test='logout-sidebar-link']"));
+        wait.until(ExpectedConditions.elementToBeClickable(logoutBtn));
+        logoutBtn.click();
+    }
 }
