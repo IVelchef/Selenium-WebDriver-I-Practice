@@ -21,11 +21,11 @@ public class loginVerification extends authenticated {
             "locked_out-user, secret_sauce",
             "error_user, secret_sauce",
     })
- public void userAuthenticated_when_validCredentialsProvided (String username , String password) {
+    public void userAuthenticated_when_validCredentialsProvided(String username, String password) {
 
-    driver.manage().window().maximize();
-    driver.findElement(By.id("user-name")).sendKeys(username);
-    driver.findElement(By.id("password")).sendKeys(password + Keys.ENTER);
+        driver.manage().window().maximize();
+        driver.findElement(By.xpath("//input[@data-test='username']")).sendKeys(username);
+        driver.findElement(By.xpath("//input[@data-test='password']")).sendKeys(password + Keys.ENTER);
 
         try {
 
@@ -40,8 +40,6 @@ public class loginVerification extends authenticated {
             } else {
                 Assertions.fail("Unexpected error! The 'shopping_cart_container' element was not found, and no error message was displayed.");
             }
-
-
-}
+        }
     }
 }
