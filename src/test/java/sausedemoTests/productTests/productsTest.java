@@ -2,10 +2,10 @@ package sausedemoTests.productTests;
 import base.authenticated;
 import enums.BrowserTypes;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -46,18 +46,29 @@ public class productsTest extends authenticated {
         Assertions.assertTrue(itemCount >= 2, "Item count in the cart should be exactly 2, but it was: " + itemCount);
 
 
+
+    }
+
+    @Test
+    public void findAllProducts(){
+
+        // var productList = getAllProducts();
+        var product = getProductByTitle("Sauce Labs Backpack");
+        product.findElement(By.className("btn_inventory")).click();
+
+        var secondProduct = getProductByTitle("Sauce Labs Onesie");
+        secondProduct.findElement(By.className("btn_inventory")).click();
+
+        driver.findElement(By.id("shopping_cart_container")).click();
+
         List<WebElement> cartItems = driver.findElements(By.cssSelector(".cart_item"));
-        Assertions.assertEquals(2, cartItems.size(),"Item count in the cart should be exactly 2, but it was: " + itemCount);
+        Assertions.assertEquals(2, cartItems.size(),"Item count in the cart should be exactly 2, but it was: " );
+
         List<String> expectedProducts = List.of("Sauce Labs Backpack", "Sauce Labs Onesie");
         for (WebElement item : cartItems) {
             String itemName = item.findElement(By.className("inventory_item_name")).getText();
             Assertions.assertTrue(expectedProducts.contains(itemName), "The item in the cart is not expected: " + itemName);
         }
-    }
-
-    @Test
-    public void findAllProducts(){
-        var productList = getAllProducts();
     }
 
     @Test
@@ -67,6 +78,23 @@ public class productsTest extends authenticated {
 
     @Test
     public void userDetailsAdded_when_checkoutWithValidInformation(){
+
+        var product = getProductByTitle("Sauce Labs Backpack");
+        product.findElement(By.className("btn_inventory")).click();
+
+        var secondProduct = getProductByTitle("Sauce Labs Onesie");
+        secondProduct.findElement(By.className("btn_inventory")).click();
+        driver.findElement(By.id("shopping_cart_container")).click();
+        driver.findElement(By.id("checkout")).click();
+
+        driver.findElement(By.id("first-name")).sendKeys("Vanko");
+        driver.findElement(By.id("last-name")).sendKeys("Vankov");
+        driver.findElement(By.id("postal-code")).sendKeys("1000");
+
+        driver.findElement(By.id("continue")).click();
+
+        WebElement summary = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout_summary_container")));
+        Assertions.assertTrue(summary.isDisplayed() ,"Is not displayed");
 
     }
 
