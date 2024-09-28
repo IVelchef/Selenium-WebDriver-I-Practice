@@ -33,26 +33,19 @@ public class loginVerification extends authenticated {
     })
     public void userAuthenticated(String username, String password) {
 
-        driver.findElement(By.xpath("//input[@data-test='username']")).sendKeys(username);
-        driver.findElement(By.xpath("//input[@data-test='password']")).sendKeys(password + Keys.ENTER);
-
         try {
+
+            authenticateWithUser(username, password);
+
             WebElement cartContainer = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("shopping_cart_container")));
-            Assertions.assertTrue(cartContainer.isDisplayed(), "'shopping_cart_container' element is not visible! Login successful.");
+            Assertions.assertTrue(cartContainer.isDisplayed(), "'shopping_cart_container' element is not visible! Login successful for user: " + username);
 
             logout();
 
         } catch (Exception e) {
-            try {
-                WebElement errorMessage = driver.findElement(By.cssSelector(".error-message-container"));
-                if (errorMessage.isDisplayed()) {
-                    System.out.println("Login failed for user: " + username + ". Incorrect credentials.");
-                }
-            } catch (Exception ex) {
-                System.out.println("Unexpected error during login for user: " + username);
-            }
 
+            System.out.println("Login failed for user: " + username );
         }
-
     }
 }
+
