@@ -4,6 +4,8 @@ import enums.BrowserTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -27,23 +29,25 @@ public class productsTest extends authenticated {
 
     }
 
-    @Test
-    public void addProduct_by_name(){
+    @ParameterizedTest
+    @CsvSource({
+            "Sauce Labs Backpack, btn_inventory , remove-sauce-labs-backpack",
+            "Sauce Labs Onesie, btn_inventory, remove-sauce-labs-onesie"
 
-        var product = getProductByTitle("Sauce Labs Backpack");
-        product.findElement(By.className("btn_inventory")).click();
-        WebElement removeButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("remove-sauce-labs-backpack")));
+    })
+    public void addProduct_by_name( String productTitle , String path , String removeButtonId){
+
+        var product = getProductByTitle(productTitle);
+        product.findElement(By.className(path)).click();
+
+        WebElement removeButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(removeButtonId)));
         Assertions.assertTrue(removeButton.isDisplayed(),"Remove button is not visible for Sauce Labs Backpack.");
 
-        var secondProduct = getProductByTitle("Sauce Labs Onesie");
-        secondProduct.findElement(By.className("btn_inventory")).click();
-        WebElement secondRemoveButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("remove-sauce-labs-onesie")));
-        Assertions.assertTrue(secondRemoveButton.isDisplayed(),"remove-sauce-labs-onesie");
 
         driver.findElement(By.id("shopping_cart_container")).click();
         WebElement cartBadge = driver.findElement(By.cssSelector("span.shopping_cart_badge[data-test='shopping-cart-badge']"));
         int itemCount = Integer.parseInt(cartBadge.getText());
-        Assertions.assertTrue(itemCount >= 2, "Item count in the cart should be exactly 2, but it was: " + itemCount);
+        Assertions.assertTrue(itemCount >= 1, "Item count in the cart should be exactly 2, but it was: " + itemCount);
 
 
 
@@ -52,22 +56,29 @@ public class productsTest extends authenticated {
     @Test
     public void findAllProducts(){
 
-        // var productList = getAllProducts();
-        var product = getProductByTitle("Sauce Labs Backpack");
-        product.findElement(By.className("btn_inventory")).click();
+        var productList = getAllProducts();
 
-        var secondProduct = getProductByTitle("Sauce Labs Onesie");
-        secondProduct.findElement(By.className("btn_inventory")).click();
+
+        String firstProductName = productList.get(0).findElement(By.className("inventory_item_name")).getText();
+        String fifthProductName = productList.get(4).findElement(By.className("inventory_item_name")).getText();
+
+        WebElement firstProduct = productList.get(0);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        wait.until(ExpectedConditions.elementToBeClickable(firstProduct.findElement(By.className("btn_inventory")))).click();
+
+        WebElement fifthProduct = productList.get(4);
+        wait.until(ExpectedConditions.elementToBeClickable(fifthProduct.findElement(By.className("btn_inventory")))).click();
 
         driver.findElement(By.id("shopping_cart_container")).click();
 
         List<WebElement> cartItems = driver.findElements(By.cssSelector(".cart_item"));
-        Assertions.assertEquals(2, cartItems.size(),"Item count in the cart should be exactly 2, but it was: " );
+        Assertions.assertEquals(2, cartItems.size(), "Item count in the cart should be exactly 2.");
 
-        List<String> expectedProducts = List.of("Sauce Labs Backpack", "Sauce Labs Onesie");
+        List<String> expectedProducts = List.of(firstProductName, fifthProductName);
+
         for (WebElement item : cartItems) {
             String itemName = item.findElement(By.className("inventory_item_name")).getText();
-            Assertions.assertTrue(expectedProducts.contains(itemName), "The item in the cart is not expected: " + itemName);
+            Assertions.assertTrue(expectedProducts.contains(itemName), "Unexpected product in the cart: " + itemName);
         }
     }
 

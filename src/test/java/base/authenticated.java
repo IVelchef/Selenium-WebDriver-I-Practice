@@ -23,8 +23,10 @@ public class authenticated {
     public static WebDriver driver;
     public static WebDriverWait wait;
 
+
     @AfterEach
     public void afterTest() {
+
         driver.quit();
     }
 
@@ -48,9 +50,9 @@ public class authenticated {
         return null;
     }
     protected static void authenticateWithUser(String username, String password){
-        //data-test="username"
+
         WebElement usernameField = driver.findElement(By.xpath("//input[@data-test='username']"));
-        //data-test="password"
+
         WebElement passwordField = driver.findElement(By.xpath("//input[@data-test='password']"));
         //data-test="login-button"
         WebElement loginBtn = driver.findElement(By.xpath("//input[@data-test='login-button']"));
