@@ -15,6 +15,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class authenticated {
@@ -82,4 +83,30 @@ public class authenticated {
         wait.until(ExpectedConditions.elementToBeClickable(logoutBtn));
         logoutBtn.click();
     }
+
+    protected List<String> addProductsToCart () {
+
+        List<WebElement> products = getAllProducts();
+        List<String> productNames = new ArrayList<>();
+
+        if (products.size() >= 5) {
+
+            WebElement firstProduct = products.get(0);
+            String firstProductName = firstProduct.findElement(By.className("inventory_item_name")).getText();
+            productNames.add(firstProductName);
+            firstProduct.findElement(By.className("btn_inventory")).click();
+
+
+            WebElement fifthProduct = products.get(4);
+            String fifthProductName = fifthProduct.findElement(By.className("inventory_item_name")).getText();
+            productNames.add(fifthProductName);
+            fifthProduct.findElement(By.className("btn_inventory")).click();
+
+        } else {
+            Assertions.fail("Not enough products available to add the first and fifth items.");
+        }
+
+        return productNames;
+    }
+
 }

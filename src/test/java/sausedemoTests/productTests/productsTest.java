@@ -21,7 +21,7 @@ public class productsTest extends authenticated {
     @BeforeEach
     public void beforeTests() {
         driver = startBrowser(BrowserTypes.CHROME);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         driver.get("https://www.saucedemo.com/");
         driver.manage().window().maximize();
 
@@ -49,8 +49,6 @@ public class productsTest extends authenticated {
         int itemCount = Integer.parseInt(cartBadge.getText());
         Assertions.assertTrue(itemCount >= 1, "Item count in the cart should be exactly 2, but it was: " + itemCount);
 
-
-
     }
 
     @Test
@@ -63,7 +61,7 @@ public class productsTest extends authenticated {
         String fifthProductName = productList.get(4).findElement(By.className("inventory_item_name")).getText();
 
         WebElement firstProduct = productList.get(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.elementToBeClickable(firstProduct.findElement(By.className("btn_inventory")))).click();
 
         WebElement fifthProduct = productList.get(4);
@@ -84,6 +82,18 @@ public class productsTest extends authenticated {
 
     @Test
     public void productAddedToShoppingCart_when_addToCart(){
+
+        List<String> addedProductNames = addProductsToCart();
+
+
+        driver.findElement(By.id("shopping_cart_container")).click();
+
+        List<WebElement> cartItems = driver.findElements(By.cssSelector(".cart_item"));
+        Assertions.assertEquals(2, cartItems.size(), "Item count in the cart should be exactly 2.");
+
+        for (String productName : addedProductNames) {
+            Assertions.assertTrue(cartItems.stream().anyMatch(item -> item.getText().contains(productName)), "The product " + productName + " is not in the cart.");
+        }
 
     }
 
