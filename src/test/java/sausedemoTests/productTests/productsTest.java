@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 public class productsTest extends authenticated {
@@ -35,13 +36,13 @@ public class productsTest extends authenticated {
             "Sauce Labs Onesie, btn_inventory, remove-sauce-labs-onesie"
 
     })
-    public void addProduct_by_name( String productTitle , String path , String removeButtonId){
+    public void addProduct_by_name(String productTitle, String path, String removeButtonId) {
 
         var product = getProductByTitle(productTitle);
         product.findElement(By.className(path)).click();
 
         WebElement removeButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(removeButtonId)));
-        Assertions.assertTrue(removeButton.isDisplayed(),"Remove button is not visible for Sauce Labs Backpack.");
+        Assertions.assertTrue(removeButton.isDisplayed(), "Remove button is not visible for Sauce Labs Backpack.");
 
 
         driver.findElement(By.id("shopping_cart_container")).click();
@@ -52,7 +53,7 @@ public class productsTest extends authenticated {
     }
 
     @Test
-    public void findAllProducts(){
+    public void findAllProducts() {
 
         var productList = getAllProducts();
 
@@ -81,7 +82,7 @@ public class productsTest extends authenticated {
     }
 
     @Test
-    public void productAddedToShoppingCart_when_addToCart(){
+    public void productAddedToShoppingCart_when_addToCart() {
 
         List<String> addedProductNames = addProductsToCart();
 
@@ -98,13 +99,10 @@ public class productsTest extends authenticated {
     }
 
     @Test
-    public void userDetailsAdded_when_checkoutWithValidInformation(){
+    public void userDetailsAdded_when_checkoutWithValidInformation() {
 
-        var product = getProductByTitle("Sauce Labs Backpack");
-        product.findElement(By.className("btn_inventory")).click();
+        addProductsToCart();
 
-        var secondProduct = getProductByTitle("Sauce Labs Onesie");
-        secondProduct.findElement(By.className("btn_inventory")).click();
         driver.findElement(By.id("shopping_cart_container")).click();
         driver.findElement(By.id("checkout")).click();
 
@@ -115,15 +113,29 @@ public class productsTest extends authenticated {
         driver.findElement(By.id("continue")).click();
 
         WebElement summary = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout_summary_container")));
-        Assertions.assertTrue(summary.isDisplayed() ,"Is not displayed");
-
+        Assertions.assertTrue(summary.isDisplayed(), "Is not displayed");
+        WebElement finish = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("finish")));
     }
 
     @Test
-    public void orderCompleted_when_addProduct_and_checkout_withConfirm(){
+    public void orderCompleted_when_addProduct_and_checkout_withConfirm() {
+
+        addProductsToCart();
+        driver.findElement(By.id("shopping_cart_container")).click();
+        driver.findElement(By.id("checkout")).click();
+
+        driver.findElement(By.id("first-name")).sendKeys("Vanko");
+        driver.findElement(By.id("last-name")).sendKeys("Vankov");
+        driver.findElement(By.id("postal-code")).sendKeys("1000");
+
+        driver.findElement(By.id("continue")).click();
+        WebElement finish = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("finish")));
+        finish.click();
+
 
     }
 }
+
 
 
 
