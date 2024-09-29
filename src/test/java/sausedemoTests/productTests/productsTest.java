@@ -7,14 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.time.Duration;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 
 public class productsTest extends authenticated {
@@ -61,12 +58,15 @@ public class productsTest extends authenticated {
         String firstProductName = productList.get(0).findElement(By.className("inventory_item_name")).getText();
         String fifthProductName = productList.get(4).findElement(By.className("inventory_item_name")).getText();
 
-        WebElement firstProduct = productList.get(0);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.elementToBeClickable(firstProduct.findElement(By.className("btn_inventory")))).click();
 
-        WebElement fifthProduct = productList.get(4);
-        wait.until(ExpectedConditions.elementToBeClickable(fifthProduct.findElement(By.className("btn_inventory")))).click();
+        addProductsToCart();
+
+//        WebElement firstProduct = productList.get(0);
+//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+//        wait.until(ExpectedConditions.elementToBeClickable(firstProduct.findElement(By.className("btn_inventory")))).click();
+//
+//        WebElement fifthProduct = productList.get(4);
+//        wait.until(ExpectedConditions.elementToBeClickable(fifthProduct.findElement(By.className("btn_inventory")))).click();
 
         driver.findElement(By.id("shopping_cart_container")).click();
 
@@ -121,6 +121,7 @@ public class productsTest extends authenticated {
     public void orderCompleted_when_addProduct_and_checkout_withConfirm() {
 
         addProductsToCart();
+
         driver.findElement(By.id("shopping_cart_container")).click();
         driver.findElement(By.id("checkout")).click();
 
@@ -132,9 +133,21 @@ public class productsTest extends authenticated {
         WebElement finish = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("finish")));
         finish.click();
 
+        try {
+            WebElement cartContainer = driver.findElement(By.id("shopping_cart_container"));
 
+            WebElement cartBadge = cartContainer.findElement(By.className("shopping_cart_badge"));
+
+            Assertions.fail("Test failed: shopping_cart_badge is present as a child.");
+
+        }  catch (Exception e) {
+           // System.out.println("An unexpected error occurred: " + e.getMessage());
+        }
+
+
+        }
     }
-}
+
 
 
 
