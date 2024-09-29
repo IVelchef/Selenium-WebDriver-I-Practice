@@ -11,6 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,65 +28,39 @@ public class productsTest extends authenticated {
 
     }
 
-    @ParameterizedTest
-    @CsvSource({
-            "Sauce Labs Backpack, btn_inventory , remove-sauce-labs-backpack",
-            "Sauce Labs Onesie, btn_inventory, remove-sauce-labs-onesie"
+@Test
+    public void VerifyAddProductsByNameInCart () {
 
-    })
-    public void addProduct_by_name(String productTitle, String path, String removeButtonId) {
+    List<String> addedProductNames = addProductsToCart();
 
-        var product = getProductByTitle(productTitle);
+    goToShoppingCart ();
 
-        product.findElement(By.className(path)).click();
+    List<WebElement> cartItems = driver.findElements(By.className("cart_item"));
 
-        WebElement removeButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(removeButtonId)));
+    for (String productName : addedProductNames) {
 
-        Assertions.assertTrue(removeButton.isDisplayed(), "Remove button is not visible.");
-
-
-        driver.findElement(By.id("shopping_cart_container")).click();
-
-        WebElement cartBadge = driver.findElement(By.cssSelector("span.shopping_cart_badge[data-test='shopping-cart-badge']"));
-        int itemCount = Integer.parseInt(cartBadge.getText());
-
-        List<WebElement> cartItem = driver.findElements(By.className("cart_item"));
-
-
-        Assertions.assertTrue(itemCount >= 1, "Item count in the cart should be exactly 2, but it was: " + itemCount);
-
-        Assertions.assertTrue(cartItem.stream().anyMatch(item -> item.getText().contains(productTitle)),
-                "The product " + productTitle + " is not in the cart."
-        );
-
-
+        Assertions.assertTrue(cartItems.stream().anyMatch(item -> item.getText().contains(productName)),
+                "The product " + productName + " is not in the cart.");
+    }
     }
 
     @Test
-    public void findAllProducts() {
+    public void VerifyAddProductsByIndexInCart() {
 
-        var productList = getAllProducts();
+        List<String> addedProductNames = addProductsToCart();
 
+        goToShoppingCart();
 
-        String firstProductName = productList.get(0).findElement(By.className("inventory_item_name")).getText();
-        String fifthProductName = productList.get(4).findElement(By.className("inventory_item_name")).getText();
-
-
-        addProductsToCart();
-
-
-        driver.findElement(By.id("shopping_cart_container")).click();
-        List<WebElement> cartItems = driver.findElements(By.cssSelector(".cart_item"));
-
-
-
+        List<WebElement> cartItems = driver.findElements(By.className("cart_item"));
         Assertions.assertEquals(2, cartItems.size(), "Item count in the cart should be exactly 2.");
 
-        List<String> expectedProducts = List.of(firstProductName, fifthProductName);
+        WebElement cartBadge = driver.findElement(By.cssSelector("span.shopping_cart_badge[data-test='shopping-cart-badge']"));
+        int itemCount = Integer.parseInt(cartBadge.getText());
+        Assertions.assertEquals(2, itemCount, "Shopping cart badge count should be 2.");
 
-        for (WebElement item : cartItems) {
-            String itemName = item.findElement(By.className("inventory_item_name")).getText();
-            Assertions.assertTrue(expectedProducts.contains(itemName), "Unexpected product in the cart: " + itemName);
+        for (String productName : addedProductNames) {
+            Assertions.assertTrue(cartItems.stream().anyMatch(item -> item.getText().contains(productName)),
+                    "The product " + productName + " is not in the cart.");
         }
     }
 
@@ -95,13 +70,11 @@ public class productsTest extends authenticated {
         List<String> addedProductNames = addProductsToCart();
 
 
-        driver.findElement(By.id("shopping_cart_container")).click();
+        goToShoppingCart();
+
+
         List<WebElement> cartItems = driver.findElements(By.cssSelector(".cart_item"));
-
-
-
         Assertions.assertEquals(2, cartItems.size(), "Item count in the cart should be exactly 2.");
-
 
         for (String productName : addedProductNames) {
             Assertions.assertTrue(cartItems.stream().anyMatch(item -> item.getText().contains(productName)), "The product " + productName + " is not in the cart.");
@@ -114,13 +87,16 @@ public class productsTest extends authenticated {
 
         addProductsToCart();
 
+        goToShoppingCart();
+
+        goToCheckout ();
+
         fillUserInfo();
 
-        driver.findElement(By.id("continue")).click();
+        goToSummaryPage ();
 
-
-
-        VerifySummaryPage();
+        WebElement summary = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout_summary_container")));
+        Assertions.assertTrue(summary.isDisplayed(), "Is not displayed");
 
 
     }
@@ -130,17 +106,15 @@ public class productsTest extends authenticated {
 
         addProductsToCart();
 
+        goToShoppingCart();
+
+        goToCheckout ();
+
         fillUserInfo();
 
-        driver.findElement(By.id("continue")).click();
+        goToSummaryPage ();
 
-
-        VerifySummaryPage();
-
-
-        WebElement finish = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("finish")));
-
-        finish.click();
+        CompleteOrder ();
 
         List<WebElement> cartBadge = driver.findElements(By.className("shopping_cart_badge"));
 

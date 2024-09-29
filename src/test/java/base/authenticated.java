@@ -66,7 +66,7 @@ public class authenticated {
         Assertions.assertTrue(cartContainer.isDisplayed(), "'shopping_cart_container' element is not visible! Login successful.");
     }
 
-    protected WebElement getProductByTitle(String title) {
+    protected WebElement getProductByTitle (String title) {
         return driver.findElement(By.xpath(String.format("//div[@class='inventory_item' and descendant::div[text()='%s']]", title)));
     }
 
@@ -118,20 +118,47 @@ public class authenticated {
 
     protected static void fillUserInfo () {
 
-        driver.findElement(By.id("shopping_cart_container")).click();
-        driver.findElement(By.id("checkout")).click();
         fillShippingDetails("Vanko","Vankof", "1000");
 
     }
 
-    protected static void VerifySummaryPage () {
+//    protected static void VerifySummaryPage () {
+//
+//
+//        WebElement summary = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout_summary_container")));
+//        Assertions.assertTrue(summary.isDisplayed(), "Is not displayed");
+//
+//    }
 
-        WebElement summary = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout_summary_container")));
-        Assertions.assertTrue(summary.isDisplayed(), "Is not displayed");
+    protected static void goToShoppingCart () {
+
+       WebElement shoppingCart =  driver.findElement(By.id("shopping_cart_container"));
+       shoppingCart.click();
 
     }
 
+    protected static void goToCheckout () {
+
+        WebElement checkOutButton = driver.findElement(By.id("checkout"));
+        checkOutButton.click();
+
+    }
+
+    protected static void goToSummaryPage () {
+
+        WebElement continueButton = driver.findElement(By.id("continue"));
+        continueButton.click();
+
+    }
+
+    protected static void CompleteOrder () {
+
+        WebElement finish = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("finish")));
+
+        finish.click();
 
 
+
+    }
 
 }
