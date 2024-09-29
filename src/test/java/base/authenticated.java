@@ -35,7 +35,7 @@ public class authenticated {
 
 
     protected static WebDriver startBrowser(BrowserTypes browserType) {
-        // Setup Browser
+
         switch (browserType) {
             case CHROME:
                 ChromeOptions chromeOptions = new ChromeOptions();
@@ -55,7 +55,7 @@ public class authenticated {
         WebElement usernameField = driver.findElement(By.xpath("//input[@data-test='username']"));
 
         WebElement passwordField = driver.findElement(By.xpath("//input[@data-test='password']"));
-        //data-test="login-button"
+
         WebElement loginBtn = driver.findElement(By.xpath("//input[@data-test='login-button']"));
 
         usernameField.sendKeys(username);
@@ -108,5 +108,30 @@ public class authenticated {
 
         return productNames;
     }
+
+    protected static void fillShippingDetails(String firstName, String lastName, String zip) {
+        driver.findElement(By.id("first-name")).sendKeys(firstName);
+        driver.findElement(By.id("last-name")).sendKeys(lastName);
+        driver.findElement(By.id("postal-code")).sendKeys(zip);
+    }
+
+
+    protected static void fillUserInfo () {
+
+        driver.findElement(By.id("shopping_cart_container")).click();
+        driver.findElement(By.id("checkout")).click();
+        fillShippingDetails("Vanko","Vankof", "1000");
+
+    }
+
+    protected static void VerifySummaryPage () {
+
+        WebElement summary = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout_summary_container")));
+        Assertions.assertTrue(summary.isDisplayed(), "Is not displayed");
+
+    }
+
+
+
 
 }
