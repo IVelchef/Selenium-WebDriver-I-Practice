@@ -146,8 +146,6 @@ public class authenticated {
             for (int i = 0; i < itemPrices.size(); i++) {
                 System.out.println("The price of item " + (i + 1) + " is: " + itemPrices.get(i));
             }
-        } else {
-            System.out.println("Not enough items were found.");
         }
     }
 
@@ -189,9 +187,6 @@ public class authenticated {
 
         double totalItemPrice = calculateTotalItemPrice ();
         Assertions.assertEquals(totalItemPrice, subtotal, "The total item price does not match the subtotal!");
-
-
-
 
     }
 

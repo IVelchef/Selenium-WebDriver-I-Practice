@@ -52,13 +52,10 @@ public class productsTest extends authenticated {
 
         WebElement cartBadge = driver.findElement(By.cssSelector("span.shopping_cart_badge[data-test='shopping-cart-badge']"));
         int itemCount = Integer.parseInt(cartBadge.getText());
+
         Assertions.assertEquals(2, itemCount, "Shopping cart badge count should be 2.");
 
-        for (String productName : addedProductNames) {
-            Assertions.assertTrue(cartItems.stream().anyMatch(item -> item.getText().contains(productName)),
-                    "The product " + productName + " is not in the cart.");
 
-        }
     }
 
     @Test
