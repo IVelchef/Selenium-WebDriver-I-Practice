@@ -43,6 +43,7 @@ public class productsTest extends authenticated {
 
     @Test
     public void VerifyAddProductsByIndexInCart() {
+
         List<String> addedProductNames = addProductsToCart();
 
         goToShoppingCart();
@@ -55,6 +56,8 @@ public class productsTest extends authenticated {
 
         Assertions.assertEquals(2, itemCount, "Shopping cart badge count should be 2.");
 
+
+        logout ();
 
     }
 
@@ -73,6 +76,9 @@ public class productsTest extends authenticated {
         for (String productName : addedProductNames) {
             Assertions.assertTrue(cartItems.stream().anyMatch(item -> item.getText().contains(productName)), "The product " + productName + " is not in the cart.");
         }
+
+
+        logout ();
 
     }
 
@@ -93,6 +99,9 @@ public class productsTest extends authenticated {
 
         WebElement summary = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout_summary_container")));
         Assertions.assertTrue(summary.isDisplayed(), "Is not displayed");
+
+
+        logout ();
 
 
 
@@ -116,6 +125,9 @@ public class productsTest extends authenticated {
         List<WebElement> cartBadge = driver.findElements(By.className("shopping_cart_badge"));
 
         Assertions.assertTrue(cartBadge.isEmpty(), "Test failed: shopping_cart_badge is present as a child.");
+
+
+        logout ();
 
 
     }
