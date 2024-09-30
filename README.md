@@ -1,3 +1,41 @@
+
+In tests, I add items to the cart by selecting products based on their
+positions (indices) on the product page, 
+rather than relying on their names. 
+This strategy provides me with several important advantages:
+
+1. Resilience to Changes
+   By adding products based on their positions, tests become more resilient 
+to changes in product names. For instance, even if the names of the 
+items change, the tests will continue to function as long 
+as the products in the corresponding positions remain the same. 
+This is particularly useful in situations where data or content on the website is updated.
+
+2. Easy Management
+   Using indices allows me to manage test scenarios more easily, 
+especially when working with a large number of products.
+This approach enables me to add items to the cart in a clearer and more structured
+way without worrying about the accuracy of the names, 
+saving time and effort when updating the tests.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Automate the following scenarios in sausedemo application:
 ---------------------------------------------
 
