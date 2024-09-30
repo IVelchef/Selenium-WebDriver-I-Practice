@@ -25,6 +25,7 @@ public class productsTest extends authenticated {
 
     }
 
+
 @Test
     public void VerifyAddProductsByNameInCart () {
 
@@ -40,6 +41,7 @@ public class productsTest extends authenticated {
                 "The product " + productName + " is not in the cart.");
     }
 }
+
 
     @Test
     public void VerifyAddProductsByIndexInCart() {
@@ -60,6 +62,7 @@ public class productsTest extends authenticated {
         logout ();
 
     }
+
 
     @Test
     public void productAddedToShoppingCart_when_addToCart() {
@@ -82,6 +85,7 @@ public class productsTest extends authenticated {
 
     }
 
+
     @Test
     public void userDetailsAdded_when_checkoutWithValidInformation() {
 
@@ -103,9 +107,8 @@ public class productsTest extends authenticated {
 
         logout ();
 
-
-
     }
+
 
     @Test
     public void orderCompleted_when_addProduct_and_checkout_withConfirm() {
@@ -128,7 +131,6 @@ public class productsTest extends authenticated {
 
 
         logout ();
-
 
     }
     }

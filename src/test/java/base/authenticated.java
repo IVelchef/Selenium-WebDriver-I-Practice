@@ -24,6 +24,7 @@ public class authenticated {
     public static WebDriverWait wait;
 
 
+
     @AfterEach
     public void afterTest() {
 
@@ -49,6 +50,8 @@ public class authenticated {
 
         return null;
     }
+
+
     protected static void authenticateWithUser(String username, String password){
 
         WebElement usernameField = driver.findElement(By.xpath("//input[@data-test='username']"));
@@ -69,9 +72,11 @@ public class authenticated {
         return driver.findElement(By.xpath(String.format("//div[@class='inventory_item' and descendant::div[text()='%s']]", title)));
     }
 
+
     protected List<WebElement> getAllProducts(){
         return driver.findElements(By.xpath("//div[@data-test='inventory-item']"));
     }
+
 
     protected static void logout (){
 
@@ -82,6 +87,7 @@ public class authenticated {
         wait.until(ExpectedConditions.elementToBeClickable(logoutBtn));
         logoutBtn.click();
     }
+
 
     protected List<String> addProductsToCart () {
 
@@ -108,6 +114,7 @@ public class authenticated {
         return productNames;
     }
 
+
     protected static void fillShippingDetails(String firstName, String lastName, String zip) {
         driver.findElement(By.id("first-name")).sendKeys(firstName);
         driver.findElement(By.id("last-name")).sendKeys(lastName);
@@ -129,6 +136,7 @@ public class authenticated {
 
     }
 
+
     protected static void goToCheckout () {
 
         WebElement checkOutButton = driver.findElement(By.id("checkout"));
@@ -149,12 +157,14 @@ public class authenticated {
         }
     }
 
+
     protected static void goToSummaryPage () {
 
         WebElement continueButton = driver.findElement(By.id("continue"));
         continueButton.click();
 
     }
+
 
     protected static void CompleteOrder () {
 
@@ -163,6 +173,7 @@ public class authenticated {
         finish.click();
 
     }
+
 
     public static double calculateTotalItemPrice() {
         List<WebElement> priceElements = driver.findElements(By.className("inventory_item_price"));
@@ -175,6 +186,7 @@ public class authenticated {
 
         return total;
     }
+
 
     public static void summarySubtotalLabel () {
 
