@@ -1,3 +1,7 @@
+I have deleted the .idea folder, and it's possible that before the first execution of the tests, 
+IntelliJ IDEA will throw an error indicating that the project is set up in a different environment.
+However, after running the tests, the project should configure itself automatically.
+
 
 In tests, I add items to the cart by selecting products based on their
 positions (indices) on the product page, 
