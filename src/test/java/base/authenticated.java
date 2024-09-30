@@ -121,13 +121,6 @@ public class authenticated {
 
     }
 
-//    protected static void VerifySummaryPage () {
-//
-//
-//        WebElement summary = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout_summary_container")));
-//        Assertions.assertTrue(summary.isDisplayed(), "Is not displayed");
-//
-//    }
 
     protected static void goToShoppingCart () {
 
@@ -141,6 +134,21 @@ public class authenticated {
         WebElement checkOutButton = driver.findElement(By.id("checkout"));
         checkOutButton.click();
 
+        List<WebElement> priceElements = driver.findElements(By.className("inventory_item_price"));
+
+        List<String> itemPrices = new ArrayList<>();
+
+        if (priceElements.size() >= 2) {
+            for (WebElement priceElement : priceElements) {
+                itemPrices.add(priceElement.getText());
+            }
+
+            for (int i = 0; i < itemPrices.size(); i++) {
+                System.out.println("The price of item " + (i + 1) + " is: " + itemPrices.get(i));
+            }
+        } else {
+            System.out.println("Not enough items were found.");
+        }
     }
 
     protected static void goToSummaryPage () {
@@ -155,6 +163,33 @@ public class authenticated {
         WebElement finish = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("finish")));
 
         finish.click();
+
+    }
+
+    public static double calculateTotalItemPrice() {
+        List<WebElement> priceElements = driver.findElements(By.className("inventory_item_price"));
+        double total = 0.0;
+
+        for (WebElement priceElement : priceElements) {
+            String priceText = priceElement.getText().replace("$", "");
+            total += Double.parseDouble(priceText);
+        }
+
+        return total;
+    }
+
+    public static void summarySubtotalLabel () {
+
+        WebElement subtotalElement = driver.findElement(By.className("summary_subtotal_label"));
+        String subtotalText = subtotalElement.getText();
+
+        String subtotalValue = subtotalText.replace("Item total: $", "").trim();
+
+        double subtotal = Double.parseDouble(subtotalValue);
+
+        double totalItemPrice = calculateTotalItemPrice ();
+        Assertions.assertEquals(totalItemPrice, subtotal, "The total item price does not match the subtotal!");
+
 
 
 

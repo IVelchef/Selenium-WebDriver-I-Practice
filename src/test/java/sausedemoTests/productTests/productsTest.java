@@ -4,8 +4,6 @@ import enums.BrowserTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -41,11 +39,10 @@ public class productsTest extends authenticated {
         Assertions.assertTrue(cartItems.stream().anyMatch(item -> item.getText().contains(productName)),
                 "The product " + productName + " is not in the cart.");
     }
-    }
+}
 
     @Test
     public void VerifyAddProductsByIndexInCart() {
-
         List<String> addedProductNames = addProductsToCart();
 
         goToShoppingCart();
@@ -60,6 +57,7 @@ public class productsTest extends authenticated {
         for (String productName : addedProductNames) {
             Assertions.assertTrue(cartItems.stream().anyMatch(item -> item.getText().contains(productName)),
                     "The product " + productName + " is not in the cart.");
+
         }
     }
 
@@ -94,8 +92,11 @@ public class productsTest extends authenticated {
 
         goToSummaryPage ();
 
+        summarySubtotalLabel ();
+
         WebElement summary = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout_summary_container")));
         Assertions.assertTrue(summary.isDisplayed(), "Is not displayed");
+
 
 
     }
