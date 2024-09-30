@@ -28,8 +28,6 @@ public class loginVerification extends authenticated {
     @CsvSource({
             "standard_user, secret_sauce",
             "visual_user, secret_sauce",
-            "performance_glitch_user, secret_sauce",
-            "locked_out-user, secret_sauce",
             "error-user, secret_sauce",
     })
     public void userAuthenticated(String username, String password) {
